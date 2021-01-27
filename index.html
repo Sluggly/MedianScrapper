@@ -1,0 +1,76 @@
+<html>
+	<head>
+		<meta charset="utf-8">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+		<link rel="stylesheet" href="style.css">
+	</head>
+	<body>
+	<div style="display:block;" id="page-menu">
+		<div id="login-div">
+			<span>TSW Login</span><input type="text" id="input-username">
+			<span> TSW Password</span><input type="password" id="input-password">
+			<button id="bouton-login">Login</button>
+			<span id="error-login" style="display:none; color:red;">Error username or password is incorrect.</span>
+			<br>
+			<button id="bouton-offline">Offline Mode</button>
+			<span>Offline mode will require you to go to the configuration page to work.</span>
+		</div>
+		
+		<div style="display:none;" id="logged-in-div">
+			<span style="display:none;" id="text-logged-in"></span>
+			<button id="bouton-config">Configuration</button>
+			<br>
+			<span style="display:none;" id="characters-list"></span>
+			<br>
+			<button style="display:none;" id="bouton-scrap">Check Stuff</button>
+			<br>
+		</div>
+		
+		<div id="loading-text-div">
+		</div>
+	</div>
+	
+	<div id="page-item" style="display:block;">
+		<div style="display:none;" id="duplicate-filters-div">
+			<span>Duplicate Items</span>
+			<button id="bouton-dupe-sets" value="true" style="background:white;" onclick="applyFilterDupeItem(this)">Sets</button>
+			<button id="bouton-dupe-sacred" value="true" style="background:white;" onclick="applyFilterDupeItem(this)">Sacred</button>
+			<button id="bouton-dupe-charms" value="false" style="background:gray;" onclick="applyFilterDupeItem(this)">Charms</button>
+			<br>
+		</div>
+		<br>
+		<div style="display:none;" id="duplicate-items-div">
+			<br>
+			<div style="display:inline-block;">
+				<div id="duplicate-sacred-div"></div>
+				<br>
+				<div id="duplicate-sets-div"></div>
+				<br>
+				<div style="display:none;" id="duplicate-charms-div"></div>
+			</div>
+		</div>
+	</div>
+	
+	<div style="display:none;" id="page-config">
+		<span>Configuration Page</span>
+		<button id="bouton-retour-page-config">Back to Menu</button>
+		<br>
+		<span>This page is used to modify configuration that will automatically load when opening the page.</span>
+		<br>
+		<span>It's very usefull especially when using offline mode. This page will help you gain time.</span>
+		<br>
+		<br>
+		<span>This will search for an existing character and add it to the config file to autoload in offline mode.</span>
+		<br>
+		<input type="text" id="add-character-input">
+		<button id="bouton-add-character-config">Add Character</button>
+		<button id="bouton-delete-character-config">Delete Character</button>
+		<span style="display:none; color:red;" id="error-addc-config"></span>
+	</div>
+	
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+	<script src="https://cdn.socket.io/socket.io-3.0.5.js"></script>
+	<script src="script.js"></script>
+	</body>
+</html>

@@ -1,0 +1,31 @@
+body {
+	background-color: black;
+	color: white;
+	font-family: Montserrat;
+}
+
+.tooltip {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 600px;
+  background-color: black;
+  color: blue;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+  font-family: Montserrat;
+  /* Position the tooltip */
+  position: absolute;
+  z-index: 1;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+}
+.size_of_img{
+width:90px}
