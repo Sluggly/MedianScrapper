@@ -10,6 +10,8 @@ app.use(express.static('css'));
 app.use(express.static('js'));
 app.use(express.static('src'));
 
+var port = 8000; // Modify this port if you're having trouble to acces the web page.
+
 
 //app.use(express.static(__dirname + '/node_modules')); 
 // Page d'accueil
@@ -17,8 +19,8 @@ app.get('/',function(req,res) {
 	res.sendFile(__dirname + '/index.html');
 });
 
-serv.listen(8000);
-console.log('Server up at http://localhost:8000');
+serv.listen(port);
+console.log('Server up at http://localhost:' + port);
 
 // Variables
 var browser = null;
@@ -51,20 +53,26 @@ webio.sockets.on('connection', function(socket) {
 			while (true) {
 				var [characterNom] = await page.$x('/html/body/div/table/tbody/tr[' + i + ']/td[1]/b');
 				if (characterNom != null) {
-					var characterNomTmp = await characterNom.getProperty('textContent');
-					var characterNomTxt = await characterNomTmp.jsonValue();
-					var [characterLadder] = await page.$x('/html/body/div/table/tbody/tr[' + i + ']/td[5]');
-					var characterLadderTmp = await characterLadder.getProperty('textContent');
-					var characterLadderTxt = await characterLadderTmp.jsonValue();
-					var [characterLvl] = await page.$x('/html/body/div[1]/table/tbody/tr[' + i + ']/td[2]');
-					var characterLvlTmp = await characterLvl.getProperty('textContent');
-					var characterLvlTxt = await characterLvlTmp.jsonValue(); 
-					var [characterClass] = await page.$x('/html/body/div[1]/table/tbody/tr[' + i + ']/td[3]');
-					var characterClassTmp = await characterClass.getProperty('textContent');
-					var characterClassTxt = await characterClassTmp.jsonValue(); 
-					characters.push([characterNomTxt,characterLvlTxt, characterClassTxt,characterLadderTxt]);
-					console.log("Character found : " + characterNomTxt + " lvl " + characterLvlTxt + " on ladder " + characterLadderTxt + ".");
-					i++;
+					var fixOnline = await page.$x('/html/body/div/table/tbody/tr[' + i + ']/td/span/span');
+					if (fixOnline.length == 0) {
+						var characterNomTmp = await characterNom.getProperty('textContent');
+						var characterNomTxt = await characterNomTmp.jsonValue();
+						var [characterLadder] = await page.$x('/html/body/div/table/tbody/tr[' + i + ']/td[5]');
+						var characterLadderTmp = await characterLadder.getProperty('textContent');
+						var characterLadderTxt = await characterLadderTmp.jsonValue();
+						var [characterLvl] = await page.$x('/html/body/div[1]/table/tbody/tr[' + i + ']/td[2]');
+						var characterLvlTmp = await characterLvl.getProperty('textContent');
+						var characterLvlTxt = await characterLvlTmp.jsonValue(); 
+						var [characterClass] = await page.$x('/html/body/div[1]/table/tbody/tr[' + i + ']/td[3]');
+						var characterClassTmp = await characterClass.getProperty('textContent');
+						var characterClassTxt = await characterClassTmp.jsonValue(); 
+						characters.push([characterNomTxt,characterLvlTxt, characterClassTxt,characterLadderTxt]);
+						console.log("Character found : " + characterNomTxt + " lvl " + characterLvlTxt + " on ladder " + characterLadderTxt + ".");
+						i++;
+					}
+					else {
+						i = i+2;
+					}
 				}
 				else {
 					break;
