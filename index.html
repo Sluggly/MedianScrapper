@@ -31,15 +31,22 @@
 	</div>
 	
 	<div id="page-item" style="display:block;">
-		<div style="display:none;" id="duplicate-filters-div">
-			<span>Duplicate Items</span>
+		<div style="display:none;" id="page-filters-div">
+			<span>Pages</span>
+			<button id="bouton-page-duplicate" value="true" style="background:white;" onclick="swapItemPage(this)">Duplicate</button>
+			<button id="bouton-page-profile" value="false" style="background:gray;" onclick="swapItemPage(this)">Profile</button>
+		</div>
+		<br>
+		<div style="display:none;" id="filters-div">
+			<span id="page-filter-txt">Duplicate Page Items</span>
 			<button id="bouton-dupe-sets" value="true" style="background:white;" onclick="applyFilterDupeItem(this)">Sets</button>
 			<button id="bouton-dupe-sacred" value="true" style="background:white;" onclick="applyFilterDupeItem(this)">Sacred</button>
 			<button id="bouton-dupe-charms" value="false" style="background:gray;" onclick="applyFilterDupeItem(this)">Charms</button>
+			<input oninput="updateSearch(this.value)" type="search" placeholder="Search..."/>
 			<br>
 		</div>
 		<br>
-		<div style="display:none;" id="duplicate-items-div">
+		<div style="display:none;" id="duplicate-items-div" value="duplicate">
 			<br>
 			<div style="display:inline-block;">
 				<div id="duplicate-sacred-div"></div>
@@ -47,6 +54,22 @@
 				<div id="duplicate-sets-div"></div>
 				<br>
 				<div style="display:none;" id="duplicate-charms-div"></div>
+			</div>
+		</div>
+		<div style="display:none;" id="profile-items-div" value="profile">
+			<br>
+			<div style="display:inline-block;">
+				<div id="profile-sacred-div"></div>
+				<br>
+				<div id="profile-sets-div"></div>
+				<br>
+				<div id="profile-charms-div"></div>
+				<br>
+				<div id="profile-scrolls-div"></div>
+				<br>
+				<div id="profile-jewels-div"></div>
+				<br>
+				<div id="profile-relics-div"></div>
 			</div>
 		</div>
 	</div>
