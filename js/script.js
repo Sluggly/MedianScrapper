@@ -47,7 +47,7 @@ class Character {
 			var valeurDiv1 = divItem[0].getAttribute('data-value');
 			var totalDiv1 = divItem[0].getAttribute('total');
 			for (var j in divItem2) {
-				if (j != "length") {
+				if ((j != "length") && (j != "item")) {
 					var nomItemDiv = divItem2[j].getAttribute('data-value');
 					if (nomItemDiv == this.items[i].name) {
 						if (divItem2[j].style.display != "none") {
@@ -94,7 +94,7 @@ class Character {
 		var tabItemProfile = [...divItemProfile];
 		var tabAllItem = tabItemDuplicate.concat(tabItemProfile);
 		for (var i in tabAllItem) {
-			if (i != "length") {
+			if ((i != "length") && (i != "item")) {
 				var divParent = tabAllItem[i].parentNode.parentNode.parentNode.parentNode;
 				var divParentValue = divParent.getAttribute('value');
 				var nomItem = tabAllItem[i].getAttribute('data-value');
@@ -604,7 +604,7 @@ function updateSearch(txt) {
 		var tmpDiv = document.getElementsByClassName("profile-" + nom);
 		if (tmpDiv.length != 0) {
 			for (var j in tmpDiv) {
-				if (j != "length") {
+				if ((j != "length") && (j != "item")) {
 					tmpDiv[j].style.display = show;
 				}
 				else {
@@ -615,7 +615,7 @@ function updateSearch(txt) {
 		var tmpDiv = document.getElementsByClassName("duplicate-" + nom);
 		if (tmpDiv.length != 0) {
 			for (var j in tmpDiv) {
-				if (j != "length") {
+				if ((j != "length") && (j != "item")) {
 					tmpDiv[j].style.display = show;
 				}
 				else {
