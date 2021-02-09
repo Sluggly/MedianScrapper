@@ -114,7 +114,7 @@ webio.sockets.on('connection', function(socket) {
 			for (var i in characters) {
 				if (i != "SlugStopLine") {
 					await page.goto('https://tsw.vn.cz/acc/char.php?name=' + characters[i]);
-					var [characterLvl] = await page.$x('/html/body/div[1]/div[1]/table[1]/tbody/tr[1]/td[1]/b');
+					var [characterLvl] = await page.$x('/html/body/div/div[2]/table[1]/tbody/tr[1]/td[1]/b');
 					var characterLvlTmp = await characterLvl.getProperty('textContent');
 					var characterLvlTxt = await characterLvlTmp.jsonValue(); 
 					var [characterClass] = await page.$x('/html/body/div/h1/text()');
@@ -197,7 +197,7 @@ webio.sockets.on('connection', function(socket) {
 			}
 			if (bool) {
 				var character = [];
-				var [characterLvl] = await page.$x('/html/body/div[1]/div[1]/table[1]/tbody/tr[1]/td[1]/b');
+				var [characterLvl] = await page.$x('/html/body/div/div[2]/table[1]/tbody/tr[1]/td[1]/b');
 				if (characterLvl != null) {
 					characters[nom.toLowerCase()] = nom;
 					fs.writeFileSync('./config.ini', ini.stringify(config));
