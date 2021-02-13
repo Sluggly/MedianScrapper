@@ -29,6 +29,9 @@ var page = null;
 // Main
 webio.sockets.on('connection', function(socket) {
 	console.log("User connected to server.");
+	var config = ini.parse(fs.readFileSync('./config.ini', 'utf-8'));
+	socket.emit('serverFileConfig', config);
+	console.log("File configuration sent to user.");
 	socket.on('login', function(data) {
 		(async () => {
 			if (browser == null) {
@@ -248,6 +251,24 @@ webio.sockets.on('connection', function(socket) {
 		})();
 	});
 	
+	socket.on('changeAutoLoadMulesConfig', function(bool) {
+		var config = ini.parse(fs.readFileSync('./config.ini', 'utf-8'));
+		var autoLoad = config.Options;
+		autoLoad["autoMules"] = bool;
+		fs.writeFileSync('./config.ini', ini.stringify(config));
+		console.log("Change auto load mules config to: " + bool);
+		socket.emit('serverAutoLoadMulesConfig');
+	});
+	
+	socket.on('changeAutoLoadAllConfig', function(bool) {
+		var config = ini.parse(fs.readFileSync('./config.ini', 'utf-8'));
+		var autoLoad = config.Options;
+		autoLoad["autoSelectAll"] = bool;
+		fs.writeFileSync('./config.ini', ini.stringify(config));
+		console.log("Change auto load all characters config to: " + bool);
+		socket.emit('serverAutoLoadAllConfig');
+	});
+	
 	socket.on('scrapRequest', function(characters) {
 		(async () => {
 			console.log("Request to scrap " + characters.length + " characters.");
@@ -257,7 +278,7 @@ webio.sockets.on('connection', function(socket) {
 					await page.goto('https://tsw.vn.cz/acc/char.php?name=' + characters[i]);
 				}
 				catch(error) {
-					await page.screenshot({ path: "./screenshot.png" });
+					console.log(error);
 				}
 				var j = 1;
 				var items = [];

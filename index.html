@@ -22,6 +22,13 @@
 			<br>
 			<span style="display:none;" id="characters-list"></span>
 			<br>
+			<div id="bouton-filter-div" style="display:none;">
+				<button id="bouton-select-all" value=true onclick="changeAllScrapValue(this)">Select All</button>
+				<button id="bouton-deselect-all" value=false onclick="changeAllScrapValue(this)">Deselect All</button>
+				<button id="bouton-select-mules" value=true onclick="changeMulesScrapValue(this)">Select Mules</button>
+				<button id="bouton-deselect-mules" value=false onclick="changeMulesScrapValue(this)">Deselect Mules</button>
+			</div>
+			<br>
 			<button style="display:none;" id="bouton-scrap">Check Stuff</button>
 			<br>
 		</div>
@@ -89,6 +96,13 @@
 		<button id="bouton-add-character-config">Add Character</button>
 		<button id="bouton-delete-character-config">Delete Character</button>
 		<span style="display:none; color:red;" id="error-addc-config"></span>
+		<br>
+		<br>
+		<button id="bouton-autoselect-all" style="background:white;" value=true onclick="changeConfigAutoAll(this)">ON</button>
+		<span id="autoall-txt">Auto select all characters on login: TRUE</span>
+		<br>
+		<button id="bouton-autoselect-mules" style="background:gray;" value=false onclick="changeConfigAutoMules(this)">OFF</button>
+		<span id="automules-txt">Auto select mules on login: FALSE</span>
 	</div>
 	
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>

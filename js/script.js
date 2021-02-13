@@ -14,6 +14,56 @@ class Item {
 	}
 }
 
+class Config {
+	constructor() {
+		this.autoloadMules = false;
+		this.autoloadAll = true;
+	}
+	
+	changeAutoloadMules(bool) {
+		if (bool != this.autoloadMules) {
+			var btn = document.getElementById('bouton-autoselect-mules');
+			var txt = document.getElementById('automules-txt');
+			if (bool) {
+				config.autoloadMules = true;
+				btn.setAttribute("value","true");
+				btn.style.background = "white";
+				btn.innerHTML = "ON";
+				txt.innerHTML = "Auto select mules on login: TRUE";
+			}
+			else {
+				config.autoloadMules = false;
+				btn.setAttribute("value","false");
+				btn.style.background = "gray";
+				btn.innerHTML = "OFF";
+				txt.innerHTML = "Auto select mules on login: FALSE";
+			}
+		}
+	}
+	
+	changeAutoloadAll(bool) {
+		if (bool != this.autoloadAll) {
+			var btn = document.getElementById('bouton-autoselect-all');
+			var txt = document.getElementById('autoall-txt');
+			if (bool) {
+				config.autoloadAll = true;
+				btn.setAttribute("value","true");
+				btn.style.background = "white";
+				btn.innerHTML = "ON";
+				txt.innerHTML = "Auto select mules on login: TRUE";
+			}
+			else {
+				config.autoloadAll = false;
+				btn.setAttribute("value","false");
+				btn.style.background = "gray";
+				btn.innerHTML = "OFF";
+				txt.innerHTML = "Auto select mules on login: FALSE";
+			}
+		}
+	}
+	
+}
+
 class Character {
 	constructor(aname, alvl, aladder, aclasse) {
 		this.name = aname;
@@ -22,6 +72,13 @@ class Character {
 		this.classe = aclasse;
 		this.src = null;
 		this.items = [];
+		
+		if (alvl == 1) {
+			this.isMule = true;
+		}
+		else {
+			this.isMule = false;
+		}
 	}
 	
 	addItem(item) {
@@ -135,6 +192,9 @@ var boutonAddCharacterConfig = document.getElementById('bouton-add-character-con
 var boutonDeleteCharacterConfig = document.getElementById('bouton-delete-character-config');
 var boutonPageDuplicate = document.getElementById('bouton-page-duplicate');
 var boutonPageProfile = document.getElementById('bouton-page-profile');
+var boutonAutoLoadMules = document.getElementById('bouton-autoselect-mules');
+var boutonSelectAll = document.getElementById('bouton-select-all');
+var boutonDeselectAll = document.getElementById('bouton-deselect-all');
 
 // Pages
 var PageMenu = document.getElementById('page-menu');
@@ -145,6 +205,7 @@ var PageConfig = document.getElementById('page-config');
 var DivLogin = document.getElementById('login-div');
 var DivLoggedIn = document.getElementById('logged-in-div');
 var DivLoadingText = document.getElementById('loading-text-div');
+var DivBoutonFilter = document.getElementById('bouton-filter-div');
 var DivFilters = document.getElementById('filters-div');
 var DivPageFilters = document.getElementById('page-filters-div');
 var DivDuplicateItems = document.getElementById('duplicate-items-div');
@@ -184,6 +245,7 @@ var charsAdded = [];
 var loadingChars = [];
 var tmpNameGlobal = "unknown";
 var page = 'Duplicate';
+var config = new Config();
 
 // Remplissage des Dicts
 DictItemDivs['duplicate-sets-div'] = 'duplicate-sets-div';
@@ -308,6 +370,39 @@ boutonShowPageConfig.onclick = function() {
 //                      Fonctions
 // ----------------------------------------------------------
 
+// Fonction qui change toutes les valeurs de scraps
+function changeAllScrapValue(btn) {
+	var bool = btn.value;
+	for (var i in TableauBouton) {
+		if (bool == "true") {
+			TableauBouton[i].value = "true";
+			TableauBouton[i].style.background = "white";
+		}
+		else {
+			TableauBouton[i].value = "false";
+			TableauBouton[i].style.background = "gray";
+		}
+	}
+}
+
+// Fonction qui change les valeurs de scrap des mules
+function changeMulesScrapValue(btn) {
+	var bool = btn.value;
+	for (var i in TableauBouton) {
+		var character = DictCharacter[TableauBouton[i].innerHTML];
+		if (character.isMule == true) {
+			if (bool == "true") {
+				TableauBouton[i].value = "true";
+				TableauBouton[i].style.background = "white";
+			}
+			else {
+				TableauBouton[i].value = "false";
+				TableauBouton[i].style.background = "gray";
+			}
+		}
+	}
+}
+
 // Fonction bouton bool scrap
 function changeScrapValue(btn) {
 	if (btn.value == "true") {
@@ -319,6 +414,31 @@ function changeScrapValue(btn) {
 		btn.style.background = "white";
 	}
 }
+
+// Changement de config autoloadMules
+function changeConfigAutoMules(btn) {
+	var bool;
+	if (btn.value == "true") {
+		bool = "false";
+	}
+	else {
+		bool = "true";
+	}
+	socket.emit("changeAutoLoadMulesConfig", bool);
+}
+
+// Changement de config autoloadMules
+function changeConfigAutoAll(btn) {
+	var bool;
+	if (btn.value == "true") {
+		bool = "false";
+	}
+	else {
+		bool = "true";
+	}
+	socket.emit("changeAutoLoadAllConfig", bool);
+}
+
 
 // Fonction qui ajoute les items d'un char dans sa liste perso div html
 function profileItem(item, categorie) {
@@ -574,19 +694,25 @@ function swapItemPage(btn) {
 // Fonction qui ajoute un bouton pour les char a scrap
 function addButtonScrapCharacter(characters) {
 	for (var i in characters) {
+		var tmpChar = new Character(characters[i][0],characters[i][1],characters[i][2],characters[i][3]);
+		TableauCharacter.push(tmpChar);
+		DictCharacter[characters[i][0]] = tmpChar;
 		var tmp = document.createElement("button");
 		tmp.id = "char" + characters[i][0];
 		tmp.value = true;
 		tmp.innerHTML = characters[i][0];
-		tmp.style.background = "white";
+		if ((config.autoloadAll == true) || ((tmpChar.isMule == true) && (config.autoloadMules == true))) {
+			tmp.style.background = "white";
+		}
+		else {
+			tmp.style.background = "gray";
+		}
 		tmp.onclick = function() { changeScrapValue(this); };
 		TexteCharactersList.appendChild(tmp);
 		TableauBouton.push(tmp);
-		var tmpChar = new Character(characters[i][0],characters[i][1],characters[i][2],characters[i][3]);
-		TableauCharacter.push(tmpChar);
-		DictCharacter[characters[i][0]] = tmpChar;
 	}
 	TexteCharactersList.style.display = 'inline-block';
+	DivBoutonFilter.style.display = 'inline-block';
 	boutonScrap.style.display = 'inline-block';
 }
 
@@ -768,4 +894,49 @@ socket.on('scrappedInfo', function(character,items){
 		loadingChars = [];
 		DivLoadingText.innerHTML = '';
 	}
+});
+
+// Changement config autoload réussi
+socket.on('serverAutoLoadMulesConfig', function() {
+	var txt = document.getElementById('automules-txt');
+	var btn = document.getElementById('bouton-autoselect-mules');
+	if (btn.value == "true") {
+		config.autoloadMules = false;
+		btn.setAttribute("value","false");
+		btn.style.background = "gray";
+		btn.innerHTML = "OFF";
+		txt.innerHTML = "Auto select mules on login: FALSE";
+	}
+	else {
+		config.autoloadMules = true;
+		btn.setAttribute("value","true");
+		btn.style.background = "white";
+		btn.innerHTML = "ON";
+		txt.innerHTML = "Auto select mules on login: TRUE";
+	}
+});
+
+socket.on('serverAutoLoadAllConfig', function() {
+	var txt = document.getElementById('autoall-txt');
+	var btn = document.getElementById('bouton-autoselect-all');
+	if (btn.value == "true") {
+		config.autoloadMules = false;
+		btn.setAttribute("value","false");
+		btn.style.background = "gray";
+		btn.innerHTML = "OFF";
+		txt.innerHTML = "Auto select all characters on login: FALSE";
+	}
+	else {
+		config.autoloadMules = true;
+		btn.setAttribute("value","true");
+		btn.style.background = "white";
+		btn.innerHTML = "ON";
+		txt.innerHTML = "Auto select all characters on login: TRUE";
+	}
+});
+
+// Réception de config
+socket.on('serverFileConfig', function(data) {
+	config.changeAutoloadMules(data.Options.autoMules);
+	config.changeAutoloadAll(data.Options.autoSelectAll)
 });
